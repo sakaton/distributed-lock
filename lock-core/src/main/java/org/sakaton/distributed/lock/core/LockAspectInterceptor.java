@@ -52,6 +52,7 @@ public class LockAspectInterceptor extends AbstractAspectSupport {
 		Lock lock = null;
 		boolean unlock = Boolean.TRUE;
 		try {
+			log.info("targetMethod:{}",  methodSignature.getName());
 			String key = format(new OperationMetadata(point, mutexLock.key()));
 			log.info("lockKey :{}, targetMethod:{}", key, methodSignature.getName());
 			lock = lockTemplate.getRedisLock(key, mutexLock.expire(), mutexLock.unit());

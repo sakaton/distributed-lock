@@ -32,12 +32,16 @@ public class DistributedLockTemplate {
 	}
 
 
-	@MutexLock
+	@MutexLock(expire = 15, unit = TimeUnit.SECONDS)
+	private static void defaultMutexLock(){
+
+	}
+
 	public Lock getRedisLock(String name) {
 
 		MutexLock mutexLock;
 		try {
-			mutexLock = DistributedLockTemplate.class.getDeclaredMethod("getRedisLock", String.class).getAnnotation(MutexLock.class);
+			mutexLock = DistributedLockTemplate.class.getDeclaredMethod("defaultMutexLock").getAnnotation(MutexLock.class);
 		} catch (NoSuchMethodException e) {
 			log.error("getRedisLock no such ", e);
 			throw new IllegalArgumentException();
