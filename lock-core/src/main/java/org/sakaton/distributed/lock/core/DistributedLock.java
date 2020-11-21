@@ -9,9 +9,13 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.lang.NonNull;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
@@ -28,6 +32,12 @@ public class DistributedLock implements Lock {
 
 	private final static Logger log = LoggerFactory.getLogger(DistributedLock.class);
 
+	private final static ThreadLocal<Map<String, AtomicInteger>> REENTRANT_MARK = new InheritableThreadLocal<Map<String, AtomicInteger>>(){
+		@Override
+		protected Map<String, AtomicInteger> initialValue() {
+			return new ConcurrentHashMap<>(16);
+		}
+	};
 
 	private final String key;
 

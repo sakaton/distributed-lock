@@ -31,6 +31,11 @@ public class DistributedLockTemplate {
 		return new DistributedLock(name, expire, unit, value, redisTemplate);
 	}
 
+	public Lock getReentrantLock(String name){
+
+		return null;
+	}
+
 
 	@MutexLock(expire = 15, unit = TimeUnit.SECONDS)
 	private static void defaultMutexLock(){
